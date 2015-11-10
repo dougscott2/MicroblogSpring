@@ -1,5 +1,6 @@
 package com.theIronYard;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +14,9 @@ import java.util.ArrayList;
  */
 @Controller
 public class MicroblogSpringController {
-    ArrayList<Message> messages = new ArrayList();
+    //ArrayList<Message> messages = new ArrayList();
+    @Autowired
+    MessageRepository messages;
 
 
     @RequestMapping("/")
@@ -21,7 +24,7 @@ public class MicroblogSpringController {
         HttpSession session = request.getSession();
         String username = (String) session.getAttribute("username");
         model.addAttribute("username", username);
-        model.addAttribute("messages", messages);
+        model.addAttribute("messages", messages.findAll());
         return "home";
     }
     @RequestMapping("/login")
@@ -31,23 +34,37 @@ public class MicroblogSpringController {
         return "redirect:/";
     }
     @RequestMapping("/addMessage")
-    public String addMessage ( String post){
-        int id = messages.size()+1;
+    public String addMessage (String text){
+        /*int id = messages.size()+1;
         Message message = new Message(id, post);
-        messages.add(message);
+        messages.add(message);*/
+        Message message = new Message();
+        message.text = text;
+        messages.save(message);
         return "redirect:/";
     }
-    int d;
+
     @RequestMapping("/deleteMessage")
-    public String deleteMessage (HttpServletRequest request, Integer id){
-        messages.remove(id-1);
+    public String deleteMessage (Integer id){
+       /* messages.remove(id-1);
         int idCount = 1;
-        for (Message message: messages){
+        for (Message message: messages.findAll()){
             message.id = idCount;
             idCount++;
-        }
+        }*/
+        //Message message = new Message();
+        messages.delete(id);
+
         return "redirect:/";
     }
+    @RequestMapping("/editMessage")
+    public String editMessage(Integer id, String text){
+        Message message = messages.findOne(id);
+        message.text = text;
+        messages.save(message);
+        return "redirect:/";
+    }
+
 
 
 

@@ -10,10 +10,11 @@
 <input type="text" placeholder="Enter your name" name="username">
     <button type="submit">Enter</button>
     {{/username}}
+    </form>
 
 {{#username}}
     <form action="addMessage" method="post">
-        <input type="text" placeholder="Enter your message" name="post">
+        <input type="text" placeholder="Enter your message" name="text"/>
         <button type="submit">Enter</button>
     </form> <br>
     Messages by {{.}}
@@ -21,11 +22,16 @@
 <br>
     {{#messages}}
     {{id}}. {{text}}
-    <form action="deleteMessage" method="post">
+    <form action="deleteMessage" method="post" style="display:inline;">
         <input type="hidden" name="id" value="{{id}}">
         <button type="submit">Delete</button></form> <br>
-    {{/messages}}
 
-</form>
+
+    <form action="editMessage" method="post">
+        <input type="hidden" name="id" value="{{id}}"/>
+        <input  type="text" placeholder="edit message" name="text"/>
+        <button type="submit">Edit</button>
+    </form>
+{{/messages}}
 </body>
 </html>
